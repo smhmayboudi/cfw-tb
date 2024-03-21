@@ -1,32 +1,28 @@
-/**
- * Welcome to Cloudflare Workers! This is your first worker.
- *
- * - Run `npm run dev` in your terminal to start a development server
- * - Open a browser tab at http://localhost:8787/ to see your worker in action
- * - Run `npm run deploy` to publish your worker
- *
- * Learn more at https://developers.cloudflare.com/workers/
- */
+import {Ai} from '@cloudflare/ai';
+import {AiTextGenerationOutput} from '@cloudflare/ai/dist/ai/tasks/text-generation';
+import {Hono} from 'hono';
 
-export interface Env {
-  // Example binding to KV. Learn more at https://developers.cloudflare.com/workers/runtime-apis/kv/
-  // MY_KV_NAMESPACE: KVNamespace;
-  //
-  // Example binding to Durable Object. Learn more at https://developers.cloudflare.com/workers/runtime-apis/durable-objects/
-  // MY_DURABLE_OBJECT: DurableObjectNamespace;
-  //
-  // Example binding to R2. Learn more at https://developers.cloudflare.com/workers/runtime-apis/r2/
-  // MY_BUCKET: R2Bucket;
-  //
-  // Example binding to a Service. Learn more at https://developers.cloudflare.com/workers/runtime-apis/service-bindings/
-  // MY_SERVICE: Fetcher;
-  //
-  // Example binding to a Queue. Learn more at https://developers.cloudflare.com/queues/javascript-apis/
-  // MY_QUEUE: Queue;
-}
-
-export default {
-  async fetch(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
-    return new Response('Hello World!');
-  },
+export type Bindings = {
+  AI: any;
 };
+
+const app = new Hono<{Bindings: Bindings}>();
+
+app.get('/', async ctx => {
+  const hasResponse = (
+    update: AiTextGenerationOutput
+  ): update is {
+    response: string;
+  } => (update as {response: string}).response !== undefined;
+
+  const ai = new Ai(ctx.env?.AI);
+  const messages = [
+    {role: 'system', content: 'You are a friendly assistant'},
+    {role: 'user', content: 'What is the origin of the phrase Hello, World'},
+  ];
+  const inputs = {messages};
+  const response = await ai.run('@cf/meta/llama-2-7b-chat-fp16', inputs).then(response => (hasResponse(response) ? response.response : ''));
+  return ctx.json(`Hello World! ${response}`);
+});
+
+export default app;
