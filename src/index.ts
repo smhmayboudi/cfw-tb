@@ -6,15 +6,30 @@ import {CustomContext, SessionData} from './types';
 import {routers} from './routers';
 import {composer} from './composers';
 import {hydrateReply} from '@grammyjs/parse-mode';
-// import {apiThrottler} from '@grammyjs/transformer-throttler';
-
-export type Bindings = {
-  AI: unknown;
-  BOT_TOKEN: string;
-};
+import {HTTPException} from 'hono/http-exception';
 
 const BOT_TOKEN = '123';
 const BOT_WEBHOOK_URL = await sha256(BOT_TOKEN);
+
+const bot = new Bot<CustomContext>(BOT_TOKEN);
+
+const initial = (): SessionData => ({
+  route: '',
+  leftOperand: 0,
+  rightOperand: 0,
+});
+const getSessionKey = (ctx: Omit<CustomContext, 'session'>) => `tbs:${ctx.chat?.id.toString()}_${ctx.from?.id?.toString()}`;
+
+bot
+  .use(hydrateReply<CustomContext>)
+  .use(session({initial, getSessionKey}))
+  .use(...routers)
+  .use(composer);
+
+type Bindings = {
+  AI: unknown;
+  BOT_TOKEN: string;
+};
 
 const app = new Hono<{Bindings: Bindings}>();
 
@@ -50,32 +65,14 @@ app.get(`/${BOT_WEBHOOK_URL}/set`, async ctx => {
   return ctx.json(response);
 });
 
-// 1. Create a bot with a token (get it from https://t.me/BotFather)
-const bot = new Bot<CustomContext>(BOT_TOKEN);
-
-// 2. Attach an api throttler transformer to the bot
-// bot.api.config.use(apiThrottler());
-
-bot.use(hydrateReply<CustomContext>);
-
-// 3. Attach a session middleware and specify the initial data
-bot.use(
-  session({
-    initial: (): SessionData => ({
-      route: '',
-      leftOperand: 0,
-      rightOperand: 0,
-    }),
-    getSessionKey: ctx => `tbs:${ctx.chat?.id.toString()}_${ctx.from?.id?.toString()}`,
-  })
-);
-
-// 4. Attach all routers to the bot as middleware
-bot.use(...routers);
-
-// 5. Attach all composers to the bot as middleware
-bot.use(composer);
-
 app.use(webhookCallback(bot, 'hono'));
+
+app.onError((err, _ctx) => {
+  if (err instanceof HTTPException) {
+    return err.getResponse();
+  }
+  const errorResponse = new Response('Unknown', {status: 401});
+  return errorResponse;
+});
 
 export default app;
