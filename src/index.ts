@@ -1,13 +1,19 @@
 import {Ai} from '@cloudflare/ai';
 import {Hono} from 'hono';
-import {Bot, webhookCallback} from 'grammy';
+import {Bot, session, webhookCallback} from 'grammy';
 import {fetch_json, hasResponse, sha256} from './lib';
+import {CustomContext, SessionData} from './types';
+import {routers} from './routers';
+import {composer} from './composers';
+import {hydrateReply} from '@grammyjs/parse-mode';
+// import {apiThrottler} from '@grammyjs/transformer-throttler';
 
 export type Bindings = {
   AI: unknown;
+  BOT_TOKEN: string;
 };
 
-const BOT_TOKEN = '';
+const BOT_TOKEN = '123';
 const BOT_WEBHOOK_URL = await sha256(BOT_TOKEN);
 
 const app = new Hono<{Bindings: Bindings}>();
@@ -44,11 +50,31 @@ app.get(`/${BOT_WEBHOOK_URL}/set`, async ctx => {
   return ctx.json(response);
 });
 
-const bot = new Bot(BOT_TOKEN);
+// 1. Create a bot with a token (get it from https://t.me/BotFather)
+const bot = new Bot<CustomContext>(BOT_TOKEN);
 
-bot.command('start', async ctx => {
-  await ctx.reply('Hello, world!');
-});
+// 2. Attach an api throttler transformer to the bot
+// bot.api.config.use(apiThrottler());
+
+bot.use(hydrateReply<CustomContext>);
+
+// 3. Attach a session middleware and specify the initial data
+bot.use(
+  session({
+    initial: (): SessionData => ({
+      route: '',
+      leftOperand: 0,
+      rightOperand: 0,
+    }),
+    getSessionKey: ctx => `tbs:${ctx.chat?.id.toString()}_${ctx.from?.id?.toString()}`,
+  })
+);
+
+// 4. Attach all routers to the bot as middleware
+bot.use(...routers);
+
+// 5. Attach all composers to the bot as middleware
+bot.use(composer);
 
 app.use(webhookCallback(bot, 'hono'));
 
