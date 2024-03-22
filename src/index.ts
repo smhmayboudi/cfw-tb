@@ -7,6 +7,7 @@ import {routers} from './routers';
 import {composer} from './composers';
 import {hydrateReply} from '@grammyjs/parse-mode';
 import {HTTPException} from 'hono/http-exception';
+import {autoChatAction} from '@grammyjs/auto-chat-action';
 
 const BOT_TOKEN = '123';
 const BOT_WEBHOOK_URL = await sha256(BOT_TOKEN);
@@ -23,6 +24,7 @@ const getSessionKey = (ctx: Omit<CustomContext, 'session'>) => `tbs:${ctx.chat?.
 bot
   .use(hydrateReply<CustomContext>)
   .use(session({initial, getSessionKey}))
+  .use(autoChatAction())
   .use(...routers)
   .use(composer);
 
