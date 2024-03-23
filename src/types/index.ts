@@ -1,6 +1,8 @@
 import {ParseModeFlavor} from '@grammyjs/parse-mode';
-import {Context, LazySessionFlavor} from 'grammy';
+import {Api, Context, LazySessionFlavor} from 'grammy';
 import {AutoChatActionFlavor} from '@grammyjs/auto-chat-action';
+import {HydrateApiFlavor, HydrateFlavor} from '@grammyjs/hydrate';
+
 interface SessionData {
   leftOperand: number;
   rightOperand: number;
@@ -10,6 +12,8 @@ interface SessionData {
   };
 }
 
-type CustomContext = ParseModeFlavor<Context & AutoChatActionFlavor & LazySessionFlavor<SessionData>>;
+type CustomApi = HydrateApiFlavor<Api>;
 
-export type {CustomContext, SessionData};
+type CustomContext = ParseModeFlavor<HydrateFlavor<Context & AutoChatActionFlavor & LazySessionFlavor<SessionData>>>;
+
+export type {CustomApi, CustomContext, SessionData};
