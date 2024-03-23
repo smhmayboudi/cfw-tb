@@ -1,80 +1,37 @@
 import {Ai} from '@cloudflare/ai';
-import {Hono} from 'hono';
-import {Bot, session, webhookCallback} from 'grammy';
-import {fetch_json, hasResponse, sha256} from './lib';
+import {Bot, lazySession, webhookCallback} from 'grammy';
 import {CustomContext, SessionData} from './types';
 import {routers} from './routers';
 import {composer} from './composers';
 import {hydrateReply} from '@grammyjs/parse-mode';
-import {HTTPException} from 'hono/http-exception';
 import {autoChatAction} from '@grammyjs/auto-chat-action';
-
-const BOT_TOKEN = '123';
-const BOT_WEBHOOK_URL = await sha256(BOT_TOKEN);
-
-const bot = new Bot<CustomContext>(BOT_TOKEN);
-
-const initial = (): SessionData => ({
-  route: '',
-  leftOperand: 0,
-  rightOperand: 0,
-});
-const getSessionKey = (ctx: Omit<CustomContext, 'session'>) => `tbs:${ctx.chat?.id.toString()}_${ctx.from?.id?.toString()}`;
-
-bot
-  .use(hydrateReply<CustomContext>)
-  .use(session({initial, getSessionKey}))
-  .use(autoChatAction())
-  .use(...routers)
-  .use(composer);
+import {D1Adapter} from '@grammyjs/storage-cloudflare';
 
 type Bindings = {
-  AI: unknown;
+  AI: Ai;
+  D1: D1Database;
   BOT_TOKEN: string;
 };
 
-const app = new Hono<{Bindings: Bindings}>();
+export default {
+  async fetch(request: Request, env: Bindings, ctx: ExecutionContext) {
+    const bot = new Bot<CustomContext>(env.BOT_TOKEN);
+    const initial = (): SessionData => ({
+      route: '',
+      leftOperand: 0,
+      rightOperand: 0,
+    });
+    const getSessionKey = (ctx: Omit<CustomContext, 'session'>) =>
+      ctx.from === undefined || ctx.chat === undefined ? undefined : `${ctx.chat.id}:${ctx.from.id}`;
+    const storage = await D1Adapter.create<SessionData>(env.D1, 'SessionData');
 
-app.get('/ai', async ctx => {
-  const ai = new Ai(ctx.env?.AI);
-  const messages = [
-    {role: 'system', content: 'You are a friendly assistant'},
-    {role: 'user', content: 'What is the origin of the phrase Hello, World'},
-  ];
-  const inputs = {messages};
-  const response = await ai.run('@cf/meta/llama-2-7b-chat-fp16', inputs).then(response => (hasResponse(response) ? response.response : ''));
-  return ctx.json(`Hello World! ${response}`);
-});
+    bot
+      .use(hydrateReply<CustomContext>)
+      .use(lazySession({initial, getSessionKey, storage}))
+      .use(autoChatAction())
+      .use(...routers)
+      .use(composer);
 
-app.get(`/${BOT_WEBHOOK_URL}/del`, async ctx => {
-  const workerURL = ctx.req.url.replace(ctx.req.path, '');
-  const url = `https://api.telegram.org/bot${BOT_TOKEN}/deleteWebhook?url=${workerURL}`;
-  const response = await fetch_json(url);
-  return ctx.json(response);
-});
-
-app.get(`/${BOT_WEBHOOK_URL}/get`, async ctx => {
-  const workerURL = ctx.req.url.replace(ctx.req.path, '');
-  const url = `https://api.telegram.org/bot${BOT_TOKEN}/getWebhookInfo?url=${workerURL}`;
-  const response = await fetch_json(url);
-  return ctx.json(response);
-});
-
-app.get(`/${BOT_WEBHOOK_URL}/set`, async ctx => {
-  const workerURL = ctx.req.url.replace(ctx.req.path, '');
-  const url = `https://api.telegram.org/bot${BOT_TOKEN}/setWebhook?url=${workerURL}`;
-  const response = await fetch_json(url);
-  return ctx.json(response);
-});
-
-app.use(webhookCallback(bot, 'hono'));
-
-app.onError((err, _ctx) => {
-  if (err instanceof HTTPException) {
-    return err.getResponse();
-  }
-  const errorResponse = new Response('Unknown', {status: 401});
-  return errorResponse;
-});
-
-export default app;
+    return webhookCallback(bot, 'cloudflare-mod')(request);
+  },
+};

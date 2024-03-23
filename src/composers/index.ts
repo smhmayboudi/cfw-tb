@@ -4,16 +4,18 @@ import {CustomContext} from '../types';
 const composer = new Composer<CustomContext>();
 
 composer.command('add', async ctx => {
-  ctx.session.route = 'add-left';
-  ctx.session.leftOperand = 0;
-  ctx.session.rightOperand = 0;
+  const session = await ctx.session;
+  session.route = 'add-left';
+  session.leftOperand = 0;
+  session.rightOperand = 0;
   await ctx.reply('Send me the first number to add.');
 });
 
 composer.command('multiply', async ctx => {
-  ctx.session.route = 'multiply-left';
-  ctx.session.leftOperand = 0;
-  ctx.session.rightOperand = 0;
+  const session = await ctx.session;
+  session.route = 'multiply-left';
+  session.leftOperand = 0;
+  session.rightOperand = 0;
   await ctx.reply('Send me the first number to multiply.');
 });
 

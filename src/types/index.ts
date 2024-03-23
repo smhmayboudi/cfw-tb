@@ -1,5 +1,5 @@
 import {ParseModeFlavor} from '@grammyjs/parse-mode';
-import {Context, SessionFlavor} from 'grammy';
+import {Context, LazySessionFlavor} from 'grammy';
 import {AutoChatActionFlavor} from '@grammyjs/auto-chat-action';
 interface SessionData {
   leftOperand: number;
@@ -10,6 +10,6 @@ interface SessionData {
   };
 }
 
-type CustomContext = ParseModeFlavor<Context & AutoChatActionFlavor & SessionFlavor<SessionData>>;
+type CustomContext = ParseModeFlavor<Context & AutoChatActionFlavor & LazySessionFlavor<SessionData>>;
 
 export type {CustomContext, SessionData};

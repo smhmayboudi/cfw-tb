@@ -1,7 +1,7 @@
 import {Router} from '@grammyjs/router';
 import {CustomContext} from '../types';
 
-const router = new Router<CustomContext>(ctx => ctx.session.route);
+const router = new Router<CustomContext>(async ctx => (await ctx.session).route);
 
 router.route('multiply-left', async ctx => {
   const leftOperand = Number(ctx.msg?.text);
@@ -10,8 +10,9 @@ router.route('multiply-left', async ctx => {
     return;
   }
 
-  ctx.session.leftOperand = leftOperand;
-  ctx.session.route = 'multiply-right';
+  const session = await ctx.session;
+  session.leftOperand = leftOperand;
+  session.route = 'multiply-right';
 
   await ctx.reply('Please provide the next number to multiply.');
 });
@@ -23,10 +24,11 @@ router.route('multiply-right', async ctx => {
     return;
   }
 
-  ctx.session.rightOperand = rightOperand;
-  ctx.session.route = '';
+  const session = await ctx.session;
+  session.rightOperand = rightOperand;
+  session.route = '';
 
-  await ctx.reply(`The result of multiplying the numbers is ${ctx.session.leftOperand * ctx.session.rightOperand}`);
+  await ctx.reply(`The result of multiplying the numbers is ${session.leftOperand * session.rightOperand}`);
 });
 
 export {router};
