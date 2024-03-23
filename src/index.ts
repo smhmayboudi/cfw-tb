@@ -3,7 +3,6 @@ import {Bot, lazySession, webhookCallback} from 'grammy';
 import {CustomApi, CustomContext, SessionData} from './types';
 import {routers} from './routers';
 import {composer} from './composers';
-import {hydrateReply} from '@grammyjs/parse-mode';
 import {autoChatAction} from '@grammyjs/auto-chat-action';
 import {D1Adapter} from '@grammyjs/storage-cloudflare';
 import {hydrateApi, hydrateContext} from '@grammyjs/hydrate';
@@ -28,9 +27,8 @@ export default {
 
     bot
       .use(lazySession({initial, getSessionKey, storage}))
-      .use(hydrateReply<CustomContext>)
-      .use(hydrateContext())
-      .use(autoChatAction())
+      .use(hydrateContext<CustomContext>())
+      .use(autoChatAction<CustomContext>())
       .use(...routers)
       .use(composer);
 
