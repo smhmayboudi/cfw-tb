@@ -1,6 +1,6 @@
-import {router as addRouter} from './add';
-import {router as multiplyRouter} from './multiply';
+import add from './add';
+import multiply from './multiply';
 
-const routers = [addRouter, multiplyRouter];
+const routers = [add, multiply];
 
-export {routers};
+export default routers;

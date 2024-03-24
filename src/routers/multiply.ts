@@ -31,4 +31,4 @@ router.route('multiply-right', async ctx => {
   await ctx.reply(`The result of multiplying the numbers is ${session.leftOperand * session.rightOperand}`);
 });
 
-export {router};
+export default router;

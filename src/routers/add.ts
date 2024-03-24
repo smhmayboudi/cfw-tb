@@ -31,4 +31,4 @@ router.route('add-right', async ctx => {
   await ctx.reply(`The result of adding the numbers is ${session.leftOperand + session.rightOperand}`);
 });
 
-export {router};
+export default router;

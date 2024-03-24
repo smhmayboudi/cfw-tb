@@ -6,9 +6,6 @@ interface SessionData {
   leftOperand: number;
   rightOperand: number;
   route: string;
-  user?: {
-    __language_code?: string;
-  };
 }
 
 type CustomApi = HydrateApiFlavor<Api>;
