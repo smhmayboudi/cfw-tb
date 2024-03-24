@@ -1,5 +1,5 @@
 import {Ai} from '@cloudflare/ai';
-import {Bot, lazySession, webhookCallback} from 'grammy';
+import {Bot, GrammyError, HttpError, lazySession, webhookCallback} from 'grammy';
 import {CustomApi, CustomContext, SessionData} from './types';
 import {routers} from './routers';
 import {composer} from './composers';
@@ -33,6 +33,19 @@ export default {
       .use(composer);
 
     bot.api.config.use(hydrateApi());
+
+    bot.catch(err => {
+      const ctx = err.ctx;
+      console.error(`Error while handling update ${ctx.update.update_id}:`);
+      const e = err.error;
+      if (e instanceof GrammyError) {
+        console.error('Error in request:', e.description);
+      } else if (e instanceof HttpError) {
+        console.error('Could not contact Telegram:', e);
+      } else {
+        console.error('Unknown error:', e);
+      }
+    });
 
     return webhookCallback(bot, 'cloudflare-mod')(request);
   },
