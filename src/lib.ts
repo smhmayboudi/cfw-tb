@@ -1,6 +1,6 @@
 import {AiTextGenerationOutput} from '@cloudflare/ai/dist/ai/tasks/text-generation';
 
-const fetch_json = async (requestInfo: RequestInfo): Promise<Record<string, unknown>> =>
+const fetchJSON = async (requestInfo: RequestInfo): Promise<Record<string, unknown>> =>
   fetch(requestInfo).then(value =>
     value
       .clone()
@@ -22,4 +22,4 @@ const sha256 = async (text: string): Promise<string> =>
       .join('')
   );
 
-export {fetch_json, hasResponse, sha256};
+export {fetchJSON, hasResponse, sha256};
