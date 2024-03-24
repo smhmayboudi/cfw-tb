@@ -14,13 +14,17 @@ router.route('multiply-left', async ctx => {
   session.leftOperand = leftOperand;
   session.route = 'multiply-right';
 
-  await ctx.reply('Please provide the next number to multiply.');
+  await ctx.reply('Please provide the next number to multiply.', {
+    reply_markup: {remove_keyboard: true},
+  });
 });
 
 router.route('multiply-right', async ctx => {
   const rightOperand = Number(ctx.msg?.text);
   if (isNaN(rightOperand)) {
-    await ctx.reply('Please provide a valid number.');
+    await ctx.reply('Please provide a valid number.', {
+      reply_markup: {remove_keyboard: true},
+    });
     return;
   }
 
@@ -28,7 +32,9 @@ router.route('multiply-right', async ctx => {
   session.rightOperand = rightOperand;
   session.route = '';
 
-  await ctx.reply(`The result of multiplying the numbers is ${session.leftOperand * session.rightOperand}`);
+  await ctx.reply(`The result of multiplying the numbers is ${session.leftOperand * session.rightOperand}`, {
+    reply_markup: {remove_keyboard: true},
+  });
 });
 
 export default router;

@@ -8,7 +8,12 @@ composer.command('multiply', async ctx => {
   session.route = 'multiply-left';
   session.leftOperand = 0;
   session.rightOperand = 0;
-  await ctx.reply('Send me the first number to multiply.');
+  await ctx.reply('Send me the first number to multiply.', {
+    reply_markup: {remove_keyboard: true},
+  });
 });
 
+const help = 'To add numbers, do /add.';
+
 export default composer;
+export {help};

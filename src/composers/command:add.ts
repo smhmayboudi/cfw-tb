@@ -8,7 +8,12 @@ composer.command('add', async ctx => {
   session.route = 'add-left';
   session.leftOperand = 0;
   session.rightOperand = 0;
-  await ctx.reply('Send me the first number to add.');
+  await ctx.reply('Send me the first number to add.', {
+    reply_markup: {remove_keyboard: true},
+  });
 });
 
+const help = 'To add numbers, do /add.';
+
 export default composer;
+export {help};

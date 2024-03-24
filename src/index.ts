@@ -1,6 +1,6 @@
 import {Ai} from '@cloudflare/ai';
-import {Bot, Composer, GrammyError, HttpError, lazySession, webhookCallback} from 'grammy';
-import {Bindings, CustomApi, CustomContext, SessionData} from './types';
+import {Bot, Composer, GrammyError, HttpError, InputFile, lazySession, webhookCallback} from 'grammy';
+import {Env, CustomApi, CustomContext, SessionData} from './types';
 import routers from './routers';
 import composers from './composers';
 import {autoChatAction} from '@grammyjs/auto-chat-action';
@@ -9,8 +9,10 @@ import {hydrateApi, hydrateContext} from '@grammyjs/hydrate';
 import {Hono} from 'hono';
 import {hasResponse, sha256} from './lib';
 import {HTTPException} from 'hono/http-exception';
+import {Router} from '@grammyjs/router';
+import consts from './consts';
 
-const app = new Hono<{Bindings: Bindings}>();
+const app = new Hono<Env>();
 
 app.get('/ai', async ctx => {
   const ai = new Ai(ctx.env?.AI);
@@ -47,6 +49,7 @@ app.get('/:sha256_bot_token/webhook/:webhook_command', async ctx => {
 app.use('/bot', async (ctx, next) => {
   const bot = new Bot<CustomContext, CustomApi>(ctx.env.BOT_TOKEN);
   const initial = (): SessionData => ({
+    decor: {},
     leftOperand: 0,
     rightOperand: 0,
     route: '',
@@ -58,11 +61,39 @@ app.use('/bot', async (ctx, next) => {
 
   bot.api.config.use(hydrateApi());
 
+  const router = new Router<CustomContext>(async ctx => (await ctx.session).route);
+  router.route('decor-q8', async ctx2 => {
+    const metadata = consts.lighting.filter(a => a.text === ctx2.msg?.text);
+    if (metadata.length === 0) {
+      await ctx2.reply('لطفا یک روشنایی درست انتخاب کن.', {
+        // reply_markup: {remove_keyboard: true},
+      });
+      return;
+    }
+
+    const session = await ctx2.session;
+    session.decor.Q8 = metadata[0].data;
+
+    session.route = '';
+    ctx2.chatAction = 'upload_photo';
+    // await ctx2.reply('image is processing. please wait...');
+    const ai = new Ai(ctx.env?.AI);
+    const prompt = Object.entries(session.decor)
+      .map(a => a[1])
+      .join(' ');
+    const inputs = {prompt};
+    const response = await ai.run('@cf/stabilityai/stable-diffusion-xl-base-1.0', inputs);
+    const inputFile = new InputFile(response);
+    await ctx2.replyWithPhoto(inputFile, {
+      reply_markup: {remove_keyboard: true},
+    });
+  });
+
   bot
     .use(lazySession({initial, getSessionKey, storage}))
     .use(hydrateContext<CustomContext>())
     .use(autoChatAction<CustomContext>(bot.api))
-    .use(...routers)
+    .use(...routers, router)
     .use(composer.use(...composers));
 
   bot.catch(err => {
