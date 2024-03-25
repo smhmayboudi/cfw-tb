@@ -45,3 +45,5 @@ curl "https://cfw-tb.smhmayboudi.workers.dev/${SHA256_BOT_TOKEN}/webhook/del"
 curl "https://cfw-tb.smhmayboudi.workers.dev/${SHA256_BOT_TOKEN}/webhook/get"
 curl "https://cfw-tb.smhmayboudi.workers.dev/${SHA256_BOT_TOKEN}/webhook/set"
 ```
+
+https://smhmayboudi.github.io/cfw-tb/src/html/index.html
