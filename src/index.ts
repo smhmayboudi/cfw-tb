@@ -7,7 +7,7 @@ import {autoChatAction} from '@grammyjs/auto-chat-action';
 import {D1Adapter} from '@grammyjs/storage-cloudflare';
 import {hydrateApi, hydrateContext} from '@grammyjs/hydrate';
 import {Hono} from 'hono';
-import {hasResponse, sha256} from './lib';
+import {hasResponse, sha256} from './libs';
 import {HTTPException} from 'hono/http-exception';
 
 const app = new Hono<Env>();
