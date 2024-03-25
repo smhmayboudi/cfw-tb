@@ -3,11 +3,11 @@ import {Metadata} from '../types';
 const closets: Metadata[] = [
   {
     data: 'with closet',
-    text: 'کلوزت دارد',
+    text: 'تعویض لباس دارد',
   },
   {
     data: 'without closet',
-    text: 'کلوزت ندارد',
+    text: 'تعویض لباس ندارد',
   },
 ];
 

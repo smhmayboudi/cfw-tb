@@ -51,7 +51,7 @@ router.route('decor-q2', async ctx => {
     await ctx.reply('لطفا نوع کابینت را انتخاب بکن.', {
       reply_markup: {
         one_time_keyboard: true,
-        keyboard: new Keyboard().text(consts.cabinets[0].text).text(consts.cabinets[1].text).row().build(),
+        keyboard: new Keyboard().text(consts.cabinets[0].text).row().text(consts.cabinets[1].text).row().build(),
       },
     });
   }
@@ -61,7 +61,7 @@ router.route('decor-q2', async ctx => {
     await ctx.reply('لطفا نوع تخت خواب را انتخاب بکن.', {
       reply_markup: {
         one_time_keyboard: true,
-        keyboard: new Keyboard().text(consts.beds[0].text).text(consts.beds[1].text).row().build(),
+        keyboard: new Keyboard().text(consts.beds[0].text).row().text(consts.beds[1].text).row().build(),
       },
     });
   }
@@ -71,17 +71,24 @@ router.route('decor-q2', async ctx => {
     await ctx.reply('لطفا نوع مبلمان را انتخاب بکن.', {
       reply_markup: {
         one_time_keyboard: true,
-        keyboard: new Keyboard().text(consts.furniture[0].text).text(consts.furniture[1].text).text(consts.furniture[2].text).row().build(),
+        keyboard: new Keyboard()
+          .text(consts.furniture[0].text)
+          .row()
+          .text(consts.furniture[1].text)
+          .row()
+          .text(consts.furniture[2].text)
+          .row()
+          .build(),
       },
     });
   }
 
-  if (metadata[0].text === 'اتاق کلوزت') {
+  if (metadata[0].text === 'اتاق تعویض لباس') {
     session.route = 'decor-q6';
-    await ctx.reply('لطفا نوع کلوزت را انتخاب بکن.', {
+    await ctx.reply('لطفا نوع تعویض لباس را انتخاب بکن.', {
       reply_markup: {
         one_time_keyboard: true,
-        keyboard: new Keyboard().text(consts.closets[0].text).text(consts.closets[1].text).row().build(),
+        keyboard: new Keyboard().text(consts.closets[0].text).row().text(consts.closets[1].text).row().build(),
       },
     });
   }
@@ -174,7 +181,7 @@ router.route('decor-q5', async ctx => {
 router.route('decor-q6', async ctx => {
   const metadata = consts.closets.filter(a => a.text === ctx.msg?.text);
   if (metadata.length === 0) {
-    await ctx.reply('لطفا یک کلوزت درست انتخاب کن.', {
+    await ctx.reply('لطفا یک تعویض لباس درست انتخاب کن.', {
       // reply_markup: {remove_keyboard: true},
     });
     return;
@@ -215,7 +222,14 @@ router.route('decor-q7', async ctx => {
   await ctx.reply('لطفا نوع روشنایی را انتخاب بکن.', {
     reply_markup: {
       one_time_keyboard: true,
-      keyboard: new Keyboard().text(consts.lighting[0].text).text(consts.lighting[1].text).text(consts.lighting[2].text).row().build(),
+      keyboard: new Keyboard()
+        .text(consts.lighting[0].text)
+        .row()
+        .text(consts.lighting[1].text)
+        .row()
+        .text(consts.lighting[2].text)
+        .row()
+        .build(),
     },
   });
 });

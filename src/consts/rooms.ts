@@ -15,7 +15,7 @@ const rooms: Metadata[] = [
   },
   {
     data: 'closet room',
-    text: 'اتاق کلوزت',
+    text: 'اتاق تعویض لباس',
   },
 ];
 
