@@ -1,4 +1,3 @@
-import {Ai} from '@cloudflare/ai';
 import {Bot, Composer, GrammyError, HttpError, lazySession, webhookCallback} from 'grammy';
 import {Env, CustomApi, CustomContext, SessionData} from './types';
 import routers from './routers';
@@ -7,21 +6,10 @@ import {autoChatAction} from '@grammyjs/auto-chat-action';
 import {D1Adapter} from '@grammyjs/storage-cloudflare';
 import {hydrateApi, hydrateContext} from '@grammyjs/hydrate';
 import {Hono} from 'hono';
-import {hasResponse, sha256} from './libs';
+import {sha256} from './libs';
 import {HTTPException} from 'hono/http-exception';
 
 const app = new Hono<Env>();
-
-app.get('/ai', async ctx => {
-  const ai = new Ai(ctx.env?.AI);
-  const messages = [
-    {role: 'system', content: 'You are a friendly assistant'},
-    {role: 'user', content: 'What is the origin of the phrase Hello, World'},
-  ];
-  const inputs = {messages};
-  const response = await ai.run('@cf/meta/llama-2-7b-chat-fp16', inputs).then(response => (hasResponse(response) ? response.response : ''));
-  return ctx.json(`Hello World! ${response}`);
-});
 
 app.get('/:sha256_bot_token/webhook/:webhook_command', async ctx => {
   const {sha256_bot_token, webhook_command} = ctx.req.param();
