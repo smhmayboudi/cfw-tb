@@ -73,8 +73,8 @@ app.use('/bot', async (ctx, next) => {
   const storage = await D1Adapter.create<SessionData>(ctx.env.D1, 'SessionData');
   const composer = new Composer<CustomContext>();
 
-  bot.use(async (ctx2, next) => {
-    ctx2.env = ctx.env;
+  bot.use(async (ctxBot, next) => {
+    ctxBot.env = ctx.env;
     await next();
   });
 

@@ -1,4 +1,4 @@
-import {Composer, Keyboard, InlineKeyboard} from 'grammy';
+import {Composer, Keyboard} from 'grammy';
 import {CustomContext} from '../types';
 import consts from '../consts';
 
