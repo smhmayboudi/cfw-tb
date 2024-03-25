@@ -4,15 +4,15 @@ import {HydrateApiFlavor, HydrateFlavor} from '@grammyjs/hydrate';
 import {Ai} from '@cloudflare/ai';
 
 interface Decor {
-  Q1?: string; // 'سبک روستیک' | 'سبک ساحلی' | 'سبک مدرن' | 'سبک اسکاندیناوی' | 'سبک صنعتی' | 'سبک معاصر' | 'سبک سنتی'
-  Q2?: string; // 'اتاق آشپزخانه' | 'اتاق خواب' | 'اتاق نشیمن' | 'اتاق کلوزت'
-  Q3?: string; // 'کابینت با جزیره' | 'کابینت بدون جزیره'
-  Q4?: string; // 'تخت خواب یک نفره' | 'تخت خواب دو نفره'
-  Q5?: string; // 'مبلمان چهار نفره' | 'مبلمان شش نفره' | 'مبلمان هشت نفره'
-  Q6?: string; // 'کلوزت دارد' | 'کلوزت ندارد'
-  Q7?: string; // 'متراژ کوچک' | 'متراژ متوسط' | 'متراژ بزرگ' | 'متراژ خیلی بزرگ'
-  Q8?: string; // 'روشنایی لوستر' | 'روشنایی چراغ سقفی' | 'روشنایی لامپ ال ای دی'
-  Q9?: string; // 'چیدمان ساده و ارزان' | 'چیدمان گران و تجملاتی'
+  Q1: string; // 'سبک روستیک' | 'سبک ساحلی' | 'سبک مدرن' | 'سبک اسکاندیناوی' | 'سبک صنعتی' | 'سبک معاصر' | 'سبک سنتی'
+  Q2: string; // 'اتاق آشپزخانه' | 'اتاق خواب' | 'اتاق نشیمن' | 'اتاق کلوزت'
+  Q3: string; // 'کابینت با جزیره' | 'کابینت بدون جزیره'
+  Q4: string; // 'تخت خواب یک نفره' | 'تخت خواب دو نفره'
+  Q5: string; // 'مبلمان چهار نفره' | 'مبلمان شش نفره' | 'مبلمان هشت نفره'
+  Q6: string; // 'کلوزت دارد' | 'کلوزت ندارد'
+  Q7: string; // 'متراژ کوچک' | 'متراژ متوسط' | 'متراژ بزرگ' | 'متراژ خیلی بزرگ'
+  Q8: string; // 'روشنایی لوستر' | 'روشنایی چراغ سقفی' | 'روشنایی لامپ ال ای دی'
+  Q9: string; // 'چیدمان ساده و ارزان' | 'چیدمان گران و تجملاتی'
 }
 
 type Env = {
@@ -26,7 +26,13 @@ type Env = {
 
 type CustomApi = HydrateApiFlavor<Api>;
 
-type CustomContext = HydrateFlavor<Context & AutoChatActionFlavor & LazySessionFlavor<SessionData>>;
+type CustomContext = HydrateFlavor<
+  {
+    env: Env['Bindings'];
+  } & Context &
+    AutoChatActionFlavor &
+    LazySessionFlavor<SessionData>
+>;
 
 type Metadata = {
   data: string;
@@ -34,9 +40,15 @@ type Metadata = {
 };
 
 type SessionData = {
+  add: {
+    leftOperand: number;
+    rightOperand: number;
+  };
   decor: Decor;
-  leftOperand: number;
-  rightOperand: number;
+  multiply: {
+    leftOperand: number;
+    rightOperand: number;
+  };
   route: string;
 };
 

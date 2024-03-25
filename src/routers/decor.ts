@@ -1,7 +1,8 @@
 import {Router} from '@grammyjs/router';
 import {CustomContext} from '../types';
 import consts from '../consts';
-import {Keyboard} from 'grammy';
+import {InputFile, Keyboard} from 'grammy';
+import {Ai} from '@cloudflare/ai';
 
 const router = new Router<CustomContext>(async ctx => (await ctx.session).route);
 
@@ -219,26 +220,30 @@ router.route('decor-q7', async ctx => {
   });
 });
 
-// router.route('decor-q8', async ctx => {
-//   const metadata = consts.lighting.filter(a => a.text === ctx.msg?.text);
-//   if (metadata.length === 0) {
-//     await ctx.reply('لطفا یک روشنایی درست انتخاب کن.', {
-//       // reply_markup: {remove_keyboard: true},
-//     });
-//     return;
-//   }
+router.route('decor-q8', async ctx => {
+  const metadata = consts.lighting.filter(a => a.text === ctx.msg?.text);
+  if (metadata.length === 0) {
+    await ctx.reply('لطفا یک روشنایی درست انتخاب کن.', {
+      // reply_markup: {remove_keyboard: true},
+    });
+    return;
+  }
 
-//   const session = await ctx.session;
-//   session.decor.Q8 = metadata[0].data;
+  const session = await ctx.session;
+  session.decor.Q8 = metadata[0].data;
 
-//   session.route = 'decor-q9';
-//   const str = Object.entries(session.decor)
-//     .map(a => a[1])
-//     .join(' ');
-
-//   await ctx.reply(`${str}`, {
-//     // reply_markup: {remove_keyboard: true},
-//   });
-// });
+  session.route = '';
+  ctx.chatAction = 'upload_photo';
+  const ai = new Ai(ctx.env?.AI);
+  const prompt = Object.entries(session.decor)
+    .map(a => a[1])
+    .join(' ');
+  const inputs = {prompt};
+  const response = await ai.run('@cf/stabilityai/stable-diffusion-xl-base-1.0', inputs);
+  const inputFile = new InputFile(response);
+  await ctx.replyWithPhoto(inputFile, {
+    reply_markup: {remove_keyboard: true},
+  });
+});
 
 export default router;

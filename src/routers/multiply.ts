@@ -11,7 +11,7 @@ router.route('multiply-left', async ctx => {
   }
 
   const session = await ctx.session;
-  session.leftOperand = leftOperand;
+  session.multiply.leftOperand = leftOperand;
   session.route = 'multiply-right';
 
   await ctx.reply('Please provide the next number to multiply.', {
@@ -29,10 +29,10 @@ router.route('multiply-right', async ctx => {
   }
 
   const session = await ctx.session;
-  session.rightOperand = rightOperand;
+  session.multiply.rightOperand = rightOperand;
   session.route = '';
 
-  await ctx.reply(`The result of multiplying the numbers is ${session.leftOperand * session.rightOperand}`, {
+  await ctx.reply(`The result of multiplying the numbers is ${session.multiply.leftOperand * session.multiply.rightOperand}`, {
     reply_markup: {remove_keyboard: true},
   });
 });

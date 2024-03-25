@@ -13,7 +13,7 @@ router.route('add-left', async ctx => {
   }
 
   const session = await ctx.session;
-  session.leftOperand = leftOperand;
+  session.add.leftOperand = leftOperand;
   session.route = 'add-right';
 
   await ctx.reply('Please provide the next number to add.', {
@@ -31,10 +31,10 @@ router.route('add-right', async ctx => {
   }
 
   const session = await ctx.session;
-  session.rightOperand = rightOperand;
+  session.add.rightOperand = rightOperand;
   session.route = '';
 
-  await ctx.reply(`The result of adding the numbers is ${session.leftOperand + session.rightOperand}`, {
+  await ctx.reply(`The result of adding the numbers is ${session.add.leftOperand + session.add.rightOperand}`, {
     reply_markup: {remove_keyboard: true},
   });
 });
