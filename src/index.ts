@@ -6,7 +6,7 @@ import {autoChatAction} from '@grammyjs/auto-chat-action';
 import {D1Adapter} from '@grammyjs/storage-cloudflare';
 import {hydrateApi, hydrateContext} from '@grammyjs/hydrate';
 import {Hono} from 'hono';
-import {sha256} from './libs';
+import {initial, sha256} from './libs';
 import {HTTPException} from 'hono/http-exception';
 
 const app = new Hono<Env>();
@@ -34,28 +34,6 @@ app.get('/:sha256_bot_token/webhook/:webhook_command', async ctx => {
 
 app.use('/bot', async (ctx, next) => {
   const bot = new Bot<CustomContext, CustomApi>(ctx.env.BOT_TOKEN);
-  const initial = (): SessionData => ({
-    add: {
-      leftOperand: 0,
-      rightOperand: 0,
-    },
-    decor: {
-      Q1: '',
-      Q2: '',
-      Q3: '',
-      Q4: '',
-      Q5: '',
-      Q6: '',
-      Q7: '',
-      Q8: '',
-      Q9: '',
-    },
-    multiply: {
-      leftOperand: 0,
-      rightOperand: 0,
-    },
-    route: '',
-  });
   const getSessionKey = (ctx: Omit<CustomContext, 'session'>) =>
     ctx.from === undefined || ctx.chat === undefined ? undefined : `${ctx.chat.id}:${ctx.from.id}`;
   const storage = await D1Adapter.create<SessionData>(ctx.env.D1, 'SessionData');

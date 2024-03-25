@@ -1,4 +1,5 @@
 import {AiTextGenerationOutput} from '@cloudflare/ai/dist/ai/tasks/text-generation';
+import {SessionData} from '../types';
 
 const fetchJSON = async (requestInfo: RequestInfo): Promise<Record<string, unknown>> =>
   fetch(requestInfo).then(value =>
@@ -15,6 +16,29 @@ const hasResponse = (
   response: string;
 } => (update as {response: string}).response !== undefined;
 
+const initial = (): SessionData => ({
+  add: {
+    leftOperand: 0,
+    rightOperand: 0,
+  },
+  decor: {
+    Q1: '',
+    Q2: '',
+    Q3: '',
+    Q4: '',
+    Q5: '',
+    Q6: '',
+    Q7: '',
+    Q8: '',
+    Q9: '',
+  },
+  multiply: {
+    leftOperand: 0,
+    rightOperand: 0,
+  },
+  route: '',
+});
+
 const sha256 = async (text: string): Promise<string> =>
   crypto.subtle.digest('SHA-256', new TextEncoder().encode(text)).then(array_buffer =>
     Array.from(new Uint8Array(array_buffer))
@@ -22,4 +46,4 @@ const sha256 = async (text: string): Promise<string> =>
       .join('')
   );
 
-export {fetchJSON, hasResponse, sha256};
+export {fetchJSON, initial, hasResponse, sha256};
