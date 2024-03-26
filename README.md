@@ -47,3 +47,10 @@ curl "https://cfw-tb.smhmayboudi.workers.dev/${SHA256_BOT_TOKEN}/webhook/set"
 ```
 
 https://smhmayboudi.github.io/cfw-tb/src/html/index.html
+
+
+## References
+
+[OAuth](https://github.com/Hormold/grammy-telegram-bot-google-cloud-functions-template)
+
+[Test](https://core.telegram.org/bots/webhooks)
