@@ -83,12 +83,26 @@ router.route('decor-q2', async ctx => {
     });
   }
 
-  if (metadata[0].text === 'اتاق تعویض لباس') {
-    session.route = 'decor-q6';
-    await ctx.reply('لطفا نوع تعویض لباس را انتخاب بکن.', {
+  if (metadata[0].text === 'اتاق کلوزت') {
+    // session.route = 'decor-q6';
+    // await ctx.reply('لطفا نوع کلوزت را انتخاب بکن.', {
+    //   reply_markup: {
+    //     one_time_keyboard: true,
+    //     keyboard: new Keyboard().text(consts.closets[0].text).row().text(consts.closets[1].text).row().build(),
+    //   },
+    // });
+    session.route = 'decor-q7';
+    await ctx.reply('لطفا نوع متراژ را انتخاب بکن.', {
       reply_markup: {
         one_time_keyboard: true,
-        keyboard: new Keyboard().text(consts.closets[0].text).row().text(consts.closets[1].text).row().build(),
+        keyboard: new Keyboard()
+          .text(consts.meterage[0].text)
+          .text(consts.meterage[1].text)
+          .row()
+          .text(consts.meterage[2].text)
+          .text(consts.meterage[3].text)
+          .row()
+          .build(),
       },
     });
   }
@@ -178,33 +192,33 @@ router.route('decor-q5', async ctx => {
   });
 });
 
-router.route('decor-q6', async ctx => {
-  const metadata = consts.closets.filter(a => a.text === ctx.msg?.text);
-  if (metadata.length === 0) {
-    await ctx.reply('لطفا یک تعویض لباس درست انتخاب کن.', {
-      // reply_markup: {remove_keyboard: true},
-    });
-    return;
-  }
+// router.route('decor-q6', async ctx => {
+//   const metadata = consts.closets.filter(a => a.text === ctx.msg?.text);
+//   if (metadata.length === 0) {
+//     await ctx.reply('لطفا یک کلوزت درست انتخاب کن.', {
+//       // reply_markup: {remove_keyboard: true},
+//     });
+//     return;
+//   }
 
-  const session = await ctx.session;
-  session.decor.Q6 = metadata[0].data;
+//   const session = await ctx.session;
+//   session.decor.Q6 = metadata[0].data;
 
-  session.route = 'decor-q7';
-  await ctx.reply('لطفا نوع متراژ را انتخاب بکن.', {
-    reply_markup: {
-      one_time_keyboard: true,
-      keyboard: new Keyboard()
-        .text(consts.meterage[0].text)
-        .text(consts.meterage[1].text)
-        .row()
-        .text(consts.meterage[2].text)
-        .text(consts.meterage[3].text)
-        .row()
-        .build(),
-    },
-  });
-});
+//   session.route = 'decor-q7';
+//   await ctx.reply('لطفا نوع متراژ را انتخاب بکن.', {
+//     reply_markup: {
+//       one_time_keyboard: true,
+//       keyboard: new Keyboard()
+//         .text(consts.meterage[0].text)
+//         .text(consts.meterage[1].text)
+//         .row()
+//         .text(consts.meterage[2].text)
+//         .text(consts.meterage[3].text)
+//         .row()
+//         .build(),
+//     },
+//   });
+// });
 
 router.route('decor-q7', async ctx => {
   const metadata = consts.meterage.filter(a => a.text === ctx.msg?.text);
