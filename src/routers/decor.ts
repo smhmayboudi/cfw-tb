@@ -260,6 +260,67 @@ router.route('decor-q8', async ctx => {
   const session = await ctx.session;
   session.decor.Q8 = metadata[0].data;
 
+  session.route = 'decor-q9';
+  await ctx.reply('لطفا نوع چیدمان را انتخاب بکن.', {
+    reply_markup: {
+      one_time_keyboard: true,
+      keyboard: new Keyboard().text(consts.layout[0].text).row().text(consts.layout[1].text).row().build(),
+    },
+  });
+});
+
+router.route('decor-q9', async ctx => {
+  const metadata = consts.layout.filter(a => a.text === ctx.msg?.text);
+  if (metadata.length === 0) {
+    await ctx.reply('لطفا یک چیدمان درست انتخاب کن.', {
+      // reply_markup: {remove_keyboard: true},
+    });
+    return;
+  }
+
+  const session = await ctx.session;
+  session.decor.Q9 = metadata[0].data;
+
+  session.route = 'decor-q10';
+  await ctx.reply('لطفا نوع رنگ را انتخاب بکن.', {
+    reply_markup: {
+      one_time_keyboard: true,
+      keyboard: new Keyboard()
+        .text(consts.colour[0].text)
+        .text(consts.colour[1].text)
+        .row()
+        .text(consts.colour[2].text)
+        .text(consts.colour[3].text)
+        .row()
+        .text(consts.colour[4].text)
+        .text(consts.colour[5].text)
+        .row()
+        .text(consts.colour[6].text)
+        .text(consts.colour[7].text)
+        .row()
+        .text(consts.colour[8].text)
+        .text(consts.colour[9].text)
+        .row()
+        .text(consts.colour[10].text)
+        .text(consts.colour[11].text)
+        .row()
+        .build(),
+    },
+  });
+});
+
+router.route('decor-q10', async ctx => {
+  const metadata = consts.colour.filter(a => a.text === ctx.msg?.text);
+  if (metadata.length === 0) {
+    await ctx.reply('لطفا یک رنگ درست انتخاب کن.', {
+      // reply_markup: {remove_keyboard: true},
+    });
+    return;
+  }
+
+  const session = await ctx.session;
+  session.decor.Q10 = metadata[0].data;
+
   session.route = '';
   ctx.chatAction = 'upload_photo';
   const ai = new Ai(ctx.env?.AI);
