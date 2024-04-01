@@ -36,15 +36,7 @@ type Metadata = {
 };
 
 type SessionData = {
-  add: {
-    leftOperand: number;
-    rightOperand: number;
-  };
   decor: Decor;
-  multiply: {
-    leftOperand: number;
-    rightOperand: number;
-  };
   route: string;
 };
 

@@ -150,7 +150,7 @@ router.route('decor-q4', async ctx => {
   session.decor.Q4 = metadata[0].data;
 
   session.route = 'decor-q5';
-  await ctx.reply('نوع رنگ را انتخاب بکن.', {
+  await ctx.reply('رنگ مورد علاقه‌‌ات رو انتخاب کن.', {
     reply_markup: {
       one_time_keyboard: true,
       keyboard: new Keyboard()
