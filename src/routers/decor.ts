@@ -10,7 +10,7 @@ const router = new Router<CustomContext>(async ctx => (await ctx.session).route)
 router.route('decor-q1', async ctx => {
   const metadata = consts.styles.filter(a => a.text === ctx.msg?.text);
   if (metadata.length === 0) {
-    await ctx.reply('یکی از سبک های پیشنهادی را انتخاب کن.', {
+    await ctx.reply('یکی از سبک های پیشنهادی رو انتخاب کن.', {
       // reply_markup: {remove_keyboard: true},
     });
     return;
@@ -20,7 +20,7 @@ router.route('decor-q1', async ctx => {
   session.decor.Q1 = metadata[0].data;
 
   session.route = 'decor-q2';
-  await ctx.reply('لطفا نوع اتاق را انتخاب بکن.', {
+  await ctx.reply('اتاق مورد علاقه‌ات رو انتخاب کن.', {
     reply_markup: {
       one_time_keyboard: true,
       keyboard: new Keyboard()
@@ -38,7 +38,7 @@ router.route('decor-q1', async ctx => {
 router.route('decor-q2', async ctx => {
   const metadata = consts.rooms.filter(a => a.text === ctx.msg?.text);
   if (metadata.length === 0) {
-    await ctx.reply('لطفا یک اتاق درست انتخاب کن.', {
+    await ctx.reply('یکی از اتاق‌های پیشنهادی رو انتخاب کن.', {
       // reply_markup: {remove_keyboard: true},
     });
     return;
@@ -47,7 +47,7 @@ router.route('decor-q2', async ctx => {
   const session = await ctx.session;
   session.decor.Q2 = metadata[0].data;
 
-  if (metadata[0].text === 'اتاق آشپزخانه') {
+  if (metadata[0].text === 'آشپزخانه') {
     session.route = 'decor-q3';
     await ctx.reply('لطفا نوع کابینت را انتخاب بکن.', {
       reply_markup: {
@@ -84,7 +84,7 @@ router.route('decor-q2', async ctx => {
     });
   }
 
-  if (metadata[0].text === 'اتاق کلوزت') {
+  if (metadata[0].text === 'کلوزت') {
     // session.route = 'decor-q6';
     // await ctx.reply('لطفا نوع کلوزت را انتخاب بکن.', {
     //   reply_markup: {

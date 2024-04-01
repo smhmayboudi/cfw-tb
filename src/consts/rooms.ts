@@ -2,20 +2,20 @@ import {Metadata} from '../types';
 
 const rooms: Metadata[] = [
   {
-    data: 'kitchen room',
-    text: 'اتاق آشپزخانه',
+    data: 'bedroom',
+    text: 'اتاق خواب',
   },
   {
-    data: 'bed room',
-    text: 'اتاق خواب',
+    data: 'closet',
+    text: 'کلوزت',
+  },
+  {
+    data: 'kitchen',
+    text: 'آشپزخانه',
   },
   {
     data: 'living room',
     text: 'اتاق نشیمن',
-  },
-  {
-    data: 'closet room',
-    text: 'اتاق کلوزت',
   },
 ];
 
