@@ -17,20 +17,21 @@ composer.command('decor', async ctx => {
   session.decor.Q9 = '';
 
   session.route = 'decor-q1';
-  await ctx.reply('لطفا نوع سبک را انتخاب بکن.', {
+  await ctx.reply('سبک مورد علاقه‌ات رو انتخاب کن.', {
     reply_markup: {
       one_time_keyboard: true,
       keyboard: new Keyboard()
         .text(consts.styles[0].text)
-        .row()
         .text(consts.styles[1].text)
+        .row()
         .text(consts.styles[2].text)
-        .row()
         .text(consts.styles[3].text)
-        .text(consts.styles[4].text)
         .row()
+        .text(consts.styles[4].text)
         .text(consts.styles[5].text)
+        .row()
         .text(consts.styles[6].text)
+        .text(consts.styles[7].text)
         .row()
         .build(),
     },

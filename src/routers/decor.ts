@@ -10,7 +10,7 @@ const router = new Router<CustomContext>(async ctx => (await ctx.session).route)
 router.route('decor-q1', async ctx => {
   const metadata = consts.styles.filter(a => a.text === ctx.msg?.text);
   if (metadata.length === 0) {
-    await ctx.reply('لطفا یک سبک درست انتخاب کن.', {
+    await ctx.reply('یکی از سبک های پیشنهادی را انتخاب کن.', {
       // reply_markup: {remove_keyboard: true},
     });
     return;
