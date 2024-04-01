@@ -8,6 +8,8 @@ import {hydrateApi, hydrateContext} from '@grammyjs/hydrate';
 import {Hono} from 'hono';
 import {initial, sha256} from './libs';
 import {HTTPException} from 'hono/http-exception';
+import {Ai} from '@cloudflare/ai';
+import {AiTextToImageInput} from '@cloudflare/ai/dist/ai/tasks/text-to-image';
 
 const app = new Hono<Env>();
 
@@ -67,6 +69,17 @@ app.use('/bot', async (ctx, next) => {
   });
 
   return webhookCallback(bot, 'hono')(ctx, next);
+});
+
+app.get('/decor/:prompt', async ctx => {
+  const {prompt} = ctx.req.param();
+  const ai = new Ai(ctx.env?.AI);
+  const guidance = 7.5;
+  const num_steps = 8;
+  const strength = 1;
+  const inputs: AiTextToImageInput = {guidance, num_steps, prompt, strength};
+  const response = await ai.run('@cf/bytedance/stable-diffusion-xl-lightning', inputs);
+  return ctx.body(response);
 });
 
 app.onError((err, _ctx) => {
