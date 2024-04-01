@@ -11,10 +11,6 @@ composer.command('decor', async ctx => {
   session.decor.Q3 = '';
   session.decor.Q4 = '';
   session.decor.Q5 = '';
-  session.decor.Q6 = '';
-  session.decor.Q7 = '';
-  session.decor.Q8 = '';
-  session.decor.Q9 = '';
 
   session.route = 'decor-q1';
   await ctx.reply('سبک مورد علاقه‌ات رو انتخاب کن.', {

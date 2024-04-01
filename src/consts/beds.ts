@@ -1,14 +1,9 @@
 import {Metadata} from '../types';
 
 const beds: Metadata[] = [
-  {
-    data: 'single bed',
-    text: 'تخت خواب یک نفره',
-  },
-  {
-    data: 'double bed',
-    text: 'تخت خواب دو نفره',
-  },
+  {data: 'master bedroom', text: 'اتاق‌خواب مستر'},
+  {data: "boy's bedroom", text: 'اتاق‌خواب پسرانه'},
+  {data: "girl's bedroom", text: 'اتاق‌خواب دخترانه'},
 ];
 
 export default beds;

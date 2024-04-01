@@ -47,61 +47,61 @@ router.route('decor-q2', async ctx => {
   const session = await ctx.session;
   session.decor.Q2 = metadata[0].data;
 
-  if (metadata[0].text === 'آشپزخانه') {
+  if (metadata[0].text === 'اتاق‌خواب') {
     session.route = 'decor-q3';
-    await ctx.reply('لطفا نوع کابینت را انتخاب بکن.', {
+    await ctx.reply('اتاق‌خواب مورد نظرت رو انتخاب کن.', {
       reply_markup: {
         one_time_keyboard: true,
-        keyboard: new Keyboard().text(consts.cabinets[0].text).row().text(consts.cabinets[1].text).row().build(),
+        keyboard: new Keyboard().text(consts.beds[0].text).row().text(consts.beds[1].text).row().text(consts.beds[2].text).row().build(),
       },
     });
   }
 
-  if (metadata[0].text === 'اتاق خواب') {
+  if (metadata[0].text === 'کلوزت') {
     session.route = 'decor-q4';
-    await ctx.reply('لطفا نوع تخت خواب را انتخاب بکن.', {
-      reply_markup: {
-        one_time_keyboard: true,
-        keyboard: new Keyboard().text(consts.beds[0].text).row().text(consts.beds[1].text).row().build(),
-      },
-    });
-  }
-
-  if (metadata[0].text === 'اتاق نشیمن') {
-    session.route = 'decor-q5';
-    await ctx.reply('لطفا نوع مبلمان را انتخاب بکن.', {
+    await ctx.reply('متراژ مورد نظرت رو انتخاب کن.', {
       reply_markup: {
         one_time_keyboard: true,
         keyboard: new Keyboard()
-          .text(consts.furniture[0].text)
+          .text(consts.meterage[0].text)
           .row()
-          .text(consts.furniture[1].text)
+          .text(consts.meterage[1].text)
           .row()
-          .text(consts.furniture[2].text)
+          .text(consts.meterage[2].text)
           .row()
           .build(),
       },
     });
   }
 
-  if (metadata[0].text === 'کلوزت') {
-    // session.route = 'decor-q6';
-    // await ctx.reply('لطفا نوع کلوزت را انتخاب بکن.', {
-    //   reply_markup: {
-    //     one_time_keyboard: true,
-    //     keyboard: new Keyboard().text(consts.closets[0].text).row().text(consts.closets[1].text).row().build(),
-    //   },
-    // });
-    session.route = 'decor-q7';
-    await ctx.reply('لطفا نوع متراژ را انتخاب بکن.', {
+  if (metadata[0].text === 'آشپزخانه') {
+    session.route = 'decor-q4';
+    await ctx.reply('متراژ مورد نظرت رو انتخاب کن.', {
       reply_markup: {
         one_time_keyboard: true,
         keyboard: new Keyboard()
           .text(consts.meterage[0].text)
+          .row()
           .text(consts.meterage[1].text)
           .row()
           .text(consts.meterage[2].text)
-          .text(consts.meterage[3].text)
+          .row()
+          .build(),
+      },
+    });
+  }
+
+  if (metadata[0].text === 'اتاق نشیمن') {
+    session.route = 'decor-q4';
+    await ctx.reply('متراژ مورد نظرت رو انتخاب کن.', {
+      reply_markup: {
+        one_time_keyboard: true,
+        keyboard: new Keyboard()
+          .text(consts.meterage[0].text)
+          .row()
+          .text(consts.meterage[1].text)
+          .row()
+          .text(consts.meterage[2].text)
           .row()
           .build(),
       },
@@ -110,9 +110,9 @@ router.route('decor-q2', async ctx => {
 });
 
 router.route('decor-q3', async ctx => {
-  const metadata = consts.cabinets.filter(a => a.text === ctx.msg?.text);
+  const metadata = consts.beds.filter(a => a.text === ctx.msg?.text);
   if (metadata.length === 0) {
-    await ctx.reply('لطفا یک کابینت درست انتخاب کن.', {
+    await ctx.reply('یکی از اتاق‌خواب‌های پیشنهادی رو انتخاب کن.', {
       // reply_markup: {remove_keyboard: true},
     });
     return;
@@ -121,16 +121,16 @@ router.route('decor-q3', async ctx => {
   const session = await ctx.session;
   session.decor.Q3 = metadata[0].data;
 
-  session.route = 'decor-q7';
-  await ctx.reply('لطفا نوع متراژ را انتخاب بکن.', {
+  session.route = 'decor-q4';
+  await ctx.reply('متراژ مورد نظرت رو انتخاب کن.', {
     reply_markup: {
       one_time_keyboard: true,
       keyboard: new Keyboard()
         .text(consts.meterage[0].text)
+        .row()
         .text(consts.meterage[1].text)
         .row()
         .text(consts.meterage[2].text)
-        .text(consts.meterage[3].text)
         .row()
         .build(),
     },
@@ -138,9 +138,9 @@ router.route('decor-q3', async ctx => {
 });
 
 router.route('decor-q4', async ctx => {
-  const metadata = consts.beds.filter(a => a.text === ctx.msg?.text);
+  const metadata = consts.meterage.filter(a => a.text === ctx.msg?.text);
   if (metadata.length === 0) {
-    await ctx.reply('لطفا یک تخت خواب درست انتخاب کن.', {
+    await ctx.reply('یک متراژ درست انتخاب کن.', {
       // reply_markup: {remove_keyboard: true},
     });
     return;
@@ -149,159 +149,24 @@ router.route('decor-q4', async ctx => {
   const session = await ctx.session;
   session.decor.Q4 = metadata[0].data;
 
-  session.route = 'decor-q7';
-  await ctx.reply('لطفا نوع متراژ را انتخاب بکن.', {
-    reply_markup: {
-      one_time_keyboard: true,
-      keyboard: new Keyboard()
-        .text(consts.meterage[0].text)
-        .text(consts.meterage[1].text)
-        .row()
-        .text(consts.meterage[2].text)
-        .text(consts.meterage[3].text)
-        .row()
-        .build(),
-    },
-  });
-});
-
-router.route('decor-q5', async ctx => {
-  const metadata = consts.furniture.filter(a => a.text === ctx.msg?.text);
-  if (metadata.length === 0) {
-    await ctx.reply('لطفا یک نشیمن درست انتخاب کن.', {
-      // reply_markup: {remove_keyboard: true},
-    });
-    return;
-  }
-
-  const session = await ctx.session;
-  session.decor.Q5 = metadata[0].data;
-
-  session.route = 'decor-q7';
-  await ctx.reply('لطفا نوع متراژ را انتخاب بکن.', {
-    reply_markup: {
-      one_time_keyboard: true,
-      keyboard: new Keyboard()
-        .text(consts.meterage[0].text)
-        .text(consts.meterage[1].text)
-        .row()
-        .text(consts.meterage[2].text)
-        .text(consts.meterage[3].text)
-        .row()
-        .build(),
-    },
-  });
-});
-
-// router.route('decor-q6', async ctx => {
-//   const metadata = consts.closets.filter(a => a.text === ctx.msg?.text);
-//   if (metadata.length === 0) {
-//     await ctx.reply('لطفا یک کلوزت درست انتخاب کن.', {
-//       // reply_markup: {remove_keyboard: true},
-//     });
-//     return;
-//   }
-
-//   const session = await ctx.session;
-//   session.decor.Q6 = metadata[0].data;
-
-//   session.route = 'decor-q7';
-//   await ctx.reply('لطفا نوع متراژ را انتخاب بکن.', {
-//     reply_markup: {
-//       one_time_keyboard: true,
-//       keyboard: new Keyboard()
-//         .text(consts.meterage[0].text)
-//         .text(consts.meterage[1].text)
-//         .row()
-//         .text(consts.meterage[2].text)
-//         .text(consts.meterage[3].text)
-//         .row()
-//         .build(),
-//     },
-//   });
-// });
-
-router.route('decor-q7', async ctx => {
-  const metadata = consts.meterage.filter(a => a.text === ctx.msg?.text);
-  if (metadata.length === 0) {
-    await ctx.reply('لطفا یک متراژ درست انتخاب کن.', {
-      // reply_markup: {remove_keyboard: true},
-    });
-    return;
-  }
-
-  const session = await ctx.session;
-  session.decor.Q7 = metadata[0].data;
-
-  session.route = 'decor-q8';
-  await ctx.reply('لطفا نوع روشنایی را انتخاب بکن.', {
-    reply_markup: {
-      one_time_keyboard: true,
-      keyboard: new Keyboard()
-        .text(consts.lighting[0].text)
-        .row()
-        .text(consts.lighting[1].text)
-        .row()
-        .text(consts.lighting[2].text)
-        .row()
-        .build(),
-    },
-  });
-});
-
-router.route('decor-q8', async ctx => {
-  const metadata = consts.lighting.filter(a => a.text === ctx.msg?.text);
-  if (metadata.length === 0) {
-    await ctx.reply('لطفا یک روشنایی درست انتخاب کن.', {
-      // reply_markup: {remove_keyboard: true},
-    });
-    return;
-  }
-
-  const session = await ctx.session;
-  session.decor.Q8 = metadata[0].data;
-
-  session.route = 'decor-q9';
-  await ctx.reply('لطفا نوع چیدمان را انتخاب بکن.', {
-    reply_markup: {
-      one_time_keyboard: true,
-      keyboard: new Keyboard().text(consts.layout[0].text).row().text(consts.layout[1].text).row().build(),
-    },
-  });
-});
-
-router.route('decor-q9', async ctx => {
-  const metadata = consts.layout.filter(a => a.text === ctx.msg?.text);
-  if (metadata.length === 0) {
-    await ctx.reply('لطفا یک چیدمان درست انتخاب کن.', {
-      // reply_markup: {remove_keyboard: true},
-    });
-    return;
-  }
-
-  const session = await ctx.session;
-  session.decor.Q9 = metadata[0].data;
-
-  session.route = 'decor-q10';
-  await ctx.reply('لطفا نوع رنگ را انتخاب بکن.', {
+  session.route = 'decor-q5';
+  await ctx.reply('نوع رنگ را انتخاب بکن.', {
     reply_markup: {
       one_time_keyboard: true,
       keyboard: new Keyboard()
         .text(consts.colour[0].text)
         .text(consts.colour[1].text)
-        .row()
         .text(consts.colour[2].text)
-        .text(consts.colour[3].text)
         .row()
+        .text(consts.colour[3].text)
         .text(consts.colour[4].text)
         .text(consts.colour[5].text)
         .row()
         .text(consts.colour[6].text)
         .text(consts.colour[7].text)
-        .row()
         .text(consts.colour[8].text)
-        .text(consts.colour[9].text)
         .row()
+        .text(consts.colour[9].text)
         .text(consts.colour[10].text)
         .text(consts.colour[11].text)
         .row()
@@ -310,17 +175,17 @@ router.route('decor-q9', async ctx => {
   });
 });
 
-router.route('decor-q10', async ctx => {
+router.route('decor-q5', async ctx => {
   const metadata = consts.colour.filter(a => a.text === ctx.msg?.text);
   if (metadata.length === 0) {
-    await ctx.reply('لطفا یک رنگ درست انتخاب کن.', {
+    await ctx.reply('رنگ مورد علاقه‌ات رو انتخاب کن.', {
       // reply_markup: {remove_keyboard: true},
     });
     return;
   }
 
   const session = await ctx.session;
-  session.decor.Q10 = metadata[0].data;
+  session.decor.Q5 = metadata[0].data;
 
   session.route = '';
   ctx.chatAction = 'upload_photo';
