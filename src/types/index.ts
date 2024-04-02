@@ -1,7 +1,6 @@
 import {Api, Context, LazySessionFlavor} from 'grammy';
 import {AutoChatActionFlavor} from '@grammyjs/auto-chat-action';
 import {HydrateApiFlavor, HydrateFlavor} from '@grammyjs/hydrate';
-import {Ai} from '@cloudflare/ai';
 
 interface Decor {
   Q1: string; // سبک
@@ -13,7 +12,7 @@ interface Decor {
 
 type Env = {
   Bindings: {
-    AI: Ai;
+    AI: Fetcher;
     D1: D1Database;
     BOT_TOKEN: string;
   };
