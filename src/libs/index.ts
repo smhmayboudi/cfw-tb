@@ -17,20 +17,12 @@ const hasResponse = (
 } => (update as {response: string}).response !== undefined;
 
 const initial = (): SessionData => ({
-  add: {
-    leftOperand: 0,
-    rightOperand: 0,
-  },
   decor: {
     Q1: '',
     Q2: '',
     Q3: '',
     Q4: '',
     Q5: '',
-  },
-  multiply: {
-    leftOperand: 0,
-    rightOperand: 0,
   },
   route: '',
 });
